@@ -13,7 +13,7 @@ module ResquePauseHelper
     DEFAULT_GLOBAL_PAUSE_KEY = "pause:all"
 
     def paused?(queue)
-      !Resque.redis.mget("pause:queue:#{queue}", global_pause_key).all?(&:nil?)
+      !["pause:queue:#{queue}", global_pause_key].map{|k| Resque.redis.get(k)}.all?(&:nil?)
     end
 
     def pause(queue)
